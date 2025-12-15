@@ -4,26 +4,38 @@ CFLAGS = -Wall -O3
 OMP_FLAGS = -fopenmp
 LDFLAGS = -lm
 
-# --- Arquivos ---
-# Ajuste o caminho se seu arquivo tiver outro nome
-SRC = src/tarefaA/tarefaA.c
-EXEC = tarefaA
+# --- Caminhos ---
+# Onde está o código fonte
+SRC = src/omp/tarefaA.c
+# Onde vai ser gerado o executável
+BUILD_DIR = build
+# Nome final do executável (com o caminho)
+EXEC = $(BUILD_DIR)/tarefaA
 
-# --- Regra Padrão ---
+# --- Regras ---
+
+# Regra padrão: garante que o executável seja criado
 all: $(EXEC)
 
-# --- Compilação ---
-# Gera um único executável com suporte a OpenMP habilitado
+# Regra de Compilação
+# 1. Cria a pasta build se ela não existir (mkdir -p)
+# 2. Compila o código jogando a saída (-o) dentro da pasta build
 $(EXEC): $(SRC)
-	@echo "Compilando Tarefa A..."
+	@echo "Criando diretório de build..."
+	@mkdir -p $(BUILD_DIR)
+	@echo "Compilando $(SRC)..."
 	$(CC) $(CFLAGS) $(OMP_FLAGS) $(SRC) -o $(EXEC) $(LDFLAGS)
 
-# --- Execução via Script ---
-# Garante que está compilado e chama o seu shell script
+# Regra de Execução
+# Chama o seu script run.sh
 run: all
-	@chmod +x runtarefaA.sh
-	./runtarefaA.sh
+	@echo "Dando permissão de execução ao script..."
+	@chmod +x run.sh
+	@echo "Executando o script..."
+	./run.sh
 
-# --- Limpeza ---
+# Regra de Limpeza
+# Apaga a pasta build inteira
 clean:
-	rm -f $(EXEC)
+	@echo "Limpando arquivos compilados..."
+	rm -rf $(BUILD_DIR)

@@ -45,7 +45,7 @@ int main(int argc, char *argv[]){
 
     // configuração do número de threads a ser usada
     omp_set_num_threads(numero_threads);
-    printf("Número de threads: %d\n", omp_get_max_threads());
+    //printf("Número de threads: %d\n", omp_get_max_threads());
 
     // início da contagem do tempo
     start_time = omp_get_wtime();
@@ -64,26 +64,17 @@ int main(int argc, char *argv[]){
         
         break;
     default:
-        printf("Erro.\n");
+        printf("0,0,0,0,0,-1\n"); //erro
         break;
     }
     end_time = omp_get_wtime();
     elapsed_time = end_time - start_time;
-    printf("Tempo despendido: %f\n", elapsed_time);
+    //printf("Tempo despendido: %f\n", elapsed_time);
 
     // salvando resultados em csv
-    // abrindo arquivo
-    FILE *arquivo = fopen("src/tarefaA/tarefaA_resultados.csv", "a+");
+    // colunas
+    // variante tamanho_chunk N K numero_threads tempo
+    printf("%d,%d,%d,%d,%d,%f\n", variante, tamanho_chunk, N, K, numero_threads, elapsed_time);
 
-    // checa abertura
-    if(arquivo==NULL){
-        perror("Erro ao abrir arquivo. Suspensão de salvamento do resultado.\n");
-    }
-    else{
-        // colunas
-        // variante tamanho_chunk N K numero_threads tempo
-        fprintf(arquivo, "%d,%d,%d,%d,%d,%f\n", variante, tamanho_chunk, N, K, numero_threads, elapsed_time);
-        fclose(arquivo);
-    }
     return 0;
 }
