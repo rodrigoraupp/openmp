@@ -74,9 +74,7 @@ for N_value in df_grouped['N'].unique():
 
 print(f"Geração de gráficos concluída. Arquivos salvos em /{OUTPUT_DIR}")
 
-# --- Gráfico de Speedup Adicional (Opcional, mas recomendado) ---
-# Você também deve plotar o Speedup (Tempo Sequencial / Tempo Paralelo)
-# O tempo sequencial (1 thread) é o Tempo_Arrumada_Mean quando Threads=1
+# --- Gráfico de Speedup ---
 df_1_thread = df_grouped[df_grouped['Threads'] == 1]
 
 for N_value in df_grouped['N'].unique():
