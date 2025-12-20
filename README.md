@@ -9,65 +9,60 @@ Trabalho para a cadeira de Introdução ao Processamento Paralelo e Distribuído
 
 ## Estrutura do Repositório
 
-openmp/
-├── tarefaA/
-│   ├── src/
-│   │   └── omp/
-│   │       └── tarefaA.c
-│   ├── .gitignore
-│   ├── Makefile
-│   ├── Reprodutibilidade.md
-│   ├── Resultados.md
-│   ├── run.sh
-│   └── tarefaA.md
-│
-├── tarefaC/
-│   ├── results/
-│   │   ├── plots/
-│   │   │   ├── eficiencia.png
-│   │   │   ├── escalabilidade.png
-│   │   │   ├── speedup_vs_tamanho.png
-│   │   │   ├── tempo_vs_tamanho.png
-│   │   │   └── variancia.png
-│   │   └── resultados.csv
-│   │
-│   ├── src/
-│   │   ├── omp/
-│   │   │   ├── saxpy_parallel_simd
-│   │   │   └── saxpy_simd.c
-│   │   └── seq/
-│   │       └── saxpy_seq.c
-│   │
-│   ├── .gitignore
-│   ├── Makefile
-│   ├── plot.py
-│   ├── README.md
-│   ├── REPRODUCIBILIDADE.md
-│   ├── RESULTADOS.md
-│   ├── run.sh
-│   ├── saxpy_parallel_simd
-│   ├── saxpy_seq
-│   └── saxpy_simd
-│
-├── tarefaD/
-│   ├── bin/
-│   │   └── omp_D
-│   │
-│   ├── plots_D/
-│   │   ├── speedup_vs_threads_N_*
-│   │   ├── tempo_vs_threads_N_*
-│   │
-│   ├── src/
-│   │   └── omp/
-│   │       └── tarefaD.c
-│   │
-│   ├── Makefile
-│   ├── plot.py
-│   ├── REPRODUCIBILIDADE.md
-│   ├── RESULTADOS.md
-│   ├── resultados_D.csv
-│   ├── run.sh
-│   └── .gitignore
-│
-├── .gitignore
-└── README.md
+    .
+    ├── README.md
+    ├── tarefaA
+    │   ├── Makefile
+    │   ├── plot.py
+    │   ├── REPRODUCIBILIDADE.md
+    │   ├── RESULTADOS.md
+    │   ├── results
+    │   │   ├── analise_v1_static.png
+    │   │   ├── analise_v2_dynamic.png
+    │   │   ├── analise_v3_guided.png
+    │   │   └── experimentos.csv
+    │   ├── run.sh
+    │   ├── src
+    │   │   └── omp
+    │   │       └── tarefaA.c
+    │   └── tarefaA.md
+    ├── tarefaC
+    │   ├── Makefile
+    │   ├── plot.py
+    │   ├── README.md
+    │   ├── REPRODUCIBILIDADE.md
+    │   ├── RESULTADOS.md
+    │   ├── results
+    │   │   ├── plots
+    │   │   │   ├── eficiencia.png
+    │   │   │   ├── escalabilidade.png
+    │   │   │   ├── speedup_vs_tamanho.png
+    │   │   │   ├── tempo_vs_tamanho.png
+    │   │   │   └── variancia.png
+    │   │   └── resultados.csv
+    │   ├── run.sh
+    │   └── src
+    │       ├── omp
+    │       │   ├── saxpy_parallel_simd.c
+    │       │   └── saxpy_simd.c
+    │       └── seq
+    │           └── saxpy_seq.c
+    └── tarefaD
+        ├── bin
+        │   └── omp_D
+        ├── Makefile
+        ├── plot.py
+        ├── plots_D
+        │   ├── speedup_vs_threads_N_1000000.png
+        │   ├── speedup_vs_threads_N_100000.png
+        │   ├── speedup_vs_threads_N_500000.png
+        │   ├── tempo_vs_threads_N_1000000.png
+        │   ├── tempo_vs_threads_N_100000.png
+        │   └── tempo_vs_threads_N_500000.png
+        ├── REPRODUCIBILIDADE.md
+        ├── resultados_D.csv
+        ├── RESULTADOS.md
+        ├── run.sh
+        └── src
+            └── omp
+                └── tarefaD.c
