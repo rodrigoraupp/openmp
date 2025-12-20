@@ -1,1 +1,0 @@
-# Como reproduzir o experimento

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# --- Configurações ---
+# --- Configurações Básicas ---
 EXEC="./build/tarefaA"
 RESULTS_DIR="./results"
 CSV_FILE="$RESULTS_DIR/experimentos.csv"
@@ -19,25 +19,63 @@ if [ ! -d "$RESULTS_DIR" ]; then
 fi
 
 # 3. Cria o cabeçalho do CSV (apenas se o arquivo for novo)
-# Certifique-se que este cabeçalho bate com a ordem do printf do seu C
 if [ ! -f "$CSV_FILE" ]; then
     echo "variante,tamanho_chunk,N,K,numero_threads,tempo" > "$CSV_FILE"
 fi
 
-# --- Execução do Teste ---
-# Parâmetros: variante=1, tamanho_chunk=1, N=1000000, K=20, numero_threads=4
-PARAMS="1 1 1000000 20 4"
+# --- Definição dos Parâmetros ---
+VARIANTS=(1 2 3)
+CHUNKS=(1 4 16 64)
+NS=(100000 500000 1000000)
+KS=(20 24 28)
+THREADS=(1 2 4 8 16)
+REPETICOES=5
 
-echo "Executando teste com parâmetros: $PARAMS"
+echo "--- Iniciando Bateria de Testes ---"
+echo "Saída será gravada em: $CSV_FILE"
 
-# 4. Captura a saída e salva
-# Como seu C já imprime "param,param,param,tempo", pegamos tudo direto.
-OUTPUT=$($EXEC $PARAMS)
+# --- Loops de Execução ---
 
-# Verifica se o output não veio vazio antes de salvar (boa prática)
-if [ -n "$OUTPUT" ]; then
-    echo "$OUTPUT" >> "$CSV_FILE"
-    echo "Sucesso! Linha salva: $OUTPUT"
-else
-    echo "Aviso: O programa não retornou nada na saída padrão."
-fi
+for v in "${VARIANTS[@]}"; do
+    
+    # Lógica para Otimizar Variante 1:
+    # Se for variante 1 (Static), não variamos o chunk (usamos 1 fixo).
+    # Se for 2 ou 3 (Dynamic/Guided), usamos a lista completa de chunks.
+    if [ "$v" -eq 1 ]; then
+        CHUNKS_ATUAIS=(1)
+    else
+        CHUNKS_ATUAIS=("${CHUNKS[@]}")
+    fi
+
+    for c in "${CHUNKS_ATUAIS[@]}"; do
+        for n in "${NS[@]}"; do
+            for k in "${KS[@]}"; do
+                for t in "${THREADS[@]}"; do
+                    
+                    # Loop de Repetições (Média)
+                    for ((r=1; r<=REPETICOES; r++)); do
+                        
+                        # Feedback visual no terminal para você não achar que travou
+                        echo "[Executando] Var:$v | Chunk:$c | N:$n | K:$k | Threads:$t | Rep:$r/$REPETICOES"
+
+                        # Executa o programa
+                        # Ordem: variante tamanho_chunk N K numero_threads
+                        OUTPUT=$($EXEC $v $c $n $k $t)
+
+                        # Verifica se houve saída e salva no CSV
+                        if [ -n "$OUTPUT" ]; then
+                            echo "$OUTPUT" >> "$CSV_FILE"
+                        else
+                            echo "ALERTA: Execução retornou vazio ou falhou!"
+                        fi
+                        
+                    done # Fim Repetições
+                    
+                done # Fim Threads
+            done # Fim K
+        done # Fim N
+    done # Fim Chunk
+done # Fim Variante
+
+echo "--- Fim dos Experimentos ---"
+echo "Verifique os resultados em $CSV_FILE"

@@ -11,7 +11,6 @@ Threads: {1, 2, 4, 8, 16}
 
 // Função Fibonacci recursiva de maneira serializada
 int fibo(int n){
-    //int r1, r2;
     if (n < 2){
         return n;
     }
@@ -53,28 +52,38 @@ int main(int argc, char *argv[]){
     switch (variante){
     case 1:
         #pragma omp parallel for schedule(static)
-            for(i = 0; i < N - 1; i++){
+            for(i = 0; i < N; i++){
                 resultados[i] = fibo(i % K);
             }
         break;
     case 2:
-
+        #pragma omp parallel for schedule(dynamic,tamanho_chunk)
+        for(i = 0; i < N; i++){
+            resultados[i] = fibo(i % K);
+        }
         break;
     case 3:
-        
+        #pragma omp parallel for schedule(guided,tamanho_chunk)
+        for(i = 0; i < N; i++){
+            resultados[i] = fibo(i % K);
+        }
         break;
     default:
-        printf("0,0,0,0,0,-1\n"); //erro
-        break;
+        fprintf(stderr, "Variante inválida!\n");
+        free(resultados);
+        return 1;
     }
     end_time = omp_get_wtime();
     elapsed_time = end_time - start_time;
     //printf("Tempo despendido: %f\n", elapsed_time);
 
-    // salvando resultados em csv
+    // exibindo resultados
     // colunas
     // variante tamanho_chunk N K numero_threads tempo
     printf("%d,%d,%d,%d,%d,%f\n", variante, tamanho_chunk, N, K, numero_threads, elapsed_time);
+
+    // liberando memória
+    free(resultados);
 
     return 0;
 }
