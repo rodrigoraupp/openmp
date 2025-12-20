@@ -1,41 +1,50 @@
-# --- Variáveis ---
+# --- Variáveis de Compilação ---
 CC = gcc
 CFLAGS = -Wall -O3
 OMP_FLAGS = -fopenmp
 LDFLAGS = -lm
 
 # --- Caminhos ---
-# Onde está o código fonte
 SRC = src/omp/tarefaA.c
-# Onde vai ser gerado o executável
 BUILD_DIR = build
-# Nome final do executável (com o caminho)
 EXEC = $(BUILD_DIR)/tarefaA
 
-# --- Regras ---
+# --- Configuração do Help ---
+.PHONY: all run plot setup clean help
 
-# Regra padrão: garante que o executável seja criado
-all: $(EXEC)
+# Regra padrão (ao digitar apenas 'make')
+all: $(EXEC) ## Compila o projeto e gera o executável
 
-# Regra de Compilação
-# 1. Cria a pasta build se ela não existir (mkdir -p)
-# 2. Compila o código jogando a saída (-o) dentro da pasta build
+# --- Regras de Construção ---
+
 $(EXEC): $(SRC)
 	@echo "Criando diretório de build..."
 	@mkdir -p $(BUILD_DIR)
 	@echo "Compilando $(SRC)..."
 	$(CC) $(CFLAGS) $(OMP_FLAGS) $(SRC) -o $(EXEC) $(LDFLAGS)
 
-# Regra de Execução
-# Chama o seu script run.sh
-run: all
-	@echo "Dando permissão de execução ao script..."
+# --- Regras de Execução e Análise ---
+
+run: all ## Executa a bateria de testes (run.sh)
+	@echo "--- Iniciando Experimentos ---"
 	@chmod +x run.sh
-	@echo "Executando o script..."
 	./run.sh
 
-# Regra de Limpeza
-# Apaga a pasta build inteira
-clean:
-	@echo "Limpando arquivos compilados..."
+plot: ## Gera os gráficos a partir do CSV (plot.py)
+	@echo "--- Gerando Gráficos ---"
+	python3 plot.py
+
+setup: ## Instala dependências Python (pandas, seaborn)
+	@echo "Instalando bibliotecas..."
+	pip install pandas seaborn matplotlib
+
+clean: ## Remove arquivos compilados e temporários
+	@echo "Limpando projeto..."
 	rm -rf $(BUILD_DIR)
+
+# --- Regra de Ajuda (Mágica) ---
+help: ## Mostra esta mensagem de ajuda
+	@echo "Uso: make [alvo]"
+	@echo ""
+	@echo "Alvos disponíveis:"
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-10s\033[0m %s\n", $$1, $$2}'
